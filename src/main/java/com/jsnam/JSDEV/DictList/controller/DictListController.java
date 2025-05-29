@@ -5,10 +5,7 @@ import com.jsnam.JSDEV.DictList.entity.DictList;
 import com.jsnam.JSDEV.DictList.repository.DictListRepository;
 import com.jsnam.JSDEV.DictList.service.DictListService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +30,9 @@ public class DictListController {
     }
     
     // 리스트 상세
-    @GetMapping("/dictlist/{id}")
+    @GetMapping("/dictdetail")
     @CrossOrigin(origins = "http://localhost:5173")
-    public Map<String, Object> dictListDetail(@PathVariable("id") String dictId) {
+    public Map<String, Object> dictListDetail(@RequestParam("id") String dictId) {
         Optional<DictListDto> detail = dictListService.getDictDetail(dictId);
         Map<String, Object> response = new HashMap<>();
 
