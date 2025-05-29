@@ -1,2 +1,2 @@
 # JS-Developer-Backend-
-JS-Developer 백엔
+JS-Developer 백엔드
