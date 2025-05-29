@@ -20,24 +20,24 @@ public class DictListController {
 
     
     // 리스트
-    @GetMapping("/dictlist")
+    @GetMapping("/dictList")
     @CrossOrigin(origins = "http://localhost:5173")
     public Map<String, Object> dictList() {
         List<DictListDto> list = dictListService.getDictList();
         Map<String, Object> response = new HashMap<>();
-        response.put("dictlist", list);
+        response.put("dictList", list);
         return response;
     }
     
     // 리스트 상세
-    @GetMapping("/dictdetail")
+    @GetMapping("/dictDetail")
     @CrossOrigin(origins = "http://localhost:5173")
     public Map<String, Object> dictListDetail(@RequestParam("id") String dictId) {
         Optional<DictListDto> detail = dictListService.getDictDetail(dictId);
         Map<String, Object> response = new HashMap<>();
 
         if (detail.isPresent()) {
-            response.put("dictlistDetail", detail.get());
+            response.put("dictListDetail", detail.get());
         } else {
             response.put("error", "해당 ID의 데이터가 없습니다.");
         }
