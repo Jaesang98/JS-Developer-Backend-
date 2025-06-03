@@ -14,11 +14,26 @@ import java.util.Optional;
 public class DictListService {
     private final DictListRepository dictListRepository;
 
-    public List<DictListDto> getDictList () {
-        return dictListRepository.findByDeleteYn("N").stream().map(DictListDto::from).toList();
+    public List<DictListDto> getDictList (String dictTitle) {
+        return dictListRepository.findByList(dictTitle).stream().map(DictListDto::from).toList();
     }
 
     public Optional<DictListDto> getDictDetail (String dictId) {
-        return dictListRepository.findByDictIdAndDeleteYn(dictId, "N").map(DictListDto::from);
+        return dictListRepository.findByDictId(dictId).map(DictListDto::from);
+    }
+
+    public Optional<DictListDto> getDictDuplicate (String dictTitle) {
+        return dictListRepository.findByDictTitle(dictTitle).map(DictListDto::from);
+    }
+
+    public DictListDto insertDict (String dictTitle, String dictDescription) {
+        DictList dictList = new DictList();
+        dictList.setDictTitle(dictTitle);
+        dictList.setDictDescription(dictDescription);
+        dictList.setUserId("임시아이디");
+        dictList.setUserName("임시이름");
+        dictList.setDeleteYn("N");
+        DictList saved = dictListRepository.save(dictList);
+        return DictListDto.from(saved);
     }
 }
