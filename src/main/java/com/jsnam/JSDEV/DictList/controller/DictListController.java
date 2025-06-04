@@ -79,4 +79,42 @@ public class DictListController {
             return ResponseEntity.status(500).body(response);
         }
     }
+
+    // 삭제
+    @PostMapping("/delete")
+    @CrossOrigin(origins = "http://localhost:5173")
+    public ResponseEntity<Map<String, Object>> dictListDelete(@RequestBody DictListDto request) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            DictListDto delete = dictListService.deleteDict(request.getDictId());
+            response.put("result", true);
+            response.put("message", "삭제완료");
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception e) {
+            response.put("result", false);
+            response.put("message", "삭제실패");
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
+    // 수정
+    @PostMapping("/update")
+    @CrossOrigin(origins = "http://localhost:5173")
+    public ResponseEntity<Map<String, Object>> dictListUpdate(@RequestBody DictListDto request) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            DictListDto updated = dictListService.updateDict(request);
+            response.put("result", true);
+            response.put("message", "수정완료");
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception e) {
+            response.put("result", false);
+            response.put("message", "수정실패");
+            return ResponseEntity.status(500).body(response);
+        }
+    }
 }

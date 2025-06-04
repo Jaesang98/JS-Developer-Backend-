@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DictListRepository extends JpaRepository<DictList, String> {
-    @Query("SELECT d FROM DictList d WHERE d.dictTitle LIKE %:dictTitle% AND d.deleteYn = 'N'")
+    @Query("SELECT d FROM DictList d WHERE d.dictTitle LIKE %:dictTitle% AND d.deleteYn = 'N' ORDER BY d.updated")
     List<DictList> findByList(@Param("dictTitle") String dictTitle);
 
     Optional<DictList> findByDictId(String dictId);
 
     Optional<DictList> findByDictTitle(String dictTitle);
+
+    Optional<DictList> findByDictTitleAndDeleteYn(String dictTitle, String deleteYn);
 }
 
 
