@@ -41,7 +41,7 @@ public class SecurityConfig {
                         authorize -> authorize
 //                                .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")   // 관리자만 접근가능
 //                                .requestMatchers("/member/join").authenticated() // 로그인한 사용자만 접근 가능 (권한은 필요 없음)
-                                .requestMatchers("/auth/login").permitAll()
+//                                .requestMatchers("/auth/login").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);

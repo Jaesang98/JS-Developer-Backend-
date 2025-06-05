@@ -26,16 +26,16 @@ public class Member implements UserDetails {
     @Column(name = "user_id", nullable = false, length = 50)
     private String userId;
 
-    @Column(name = "user_name", nullable = false, length = 50)
+    @Column(name = "user_name", length = 50)
     private String userName;
 
-    @Column(name = "user_email", nullable = false, length = 50)
+    @Column(name = "user_email", length = 50)
     private String userEmail;
 
-    @Column(name = "user_phone", nullable = false, length = 50)
+    @Column(name = "user_phone", length = 50)
     private String userPhone;
 
-    @Column(name = "user_image", nullable = false, length = 50)
+    @Column(name = "user_image", length = 50)
     private String userImage;
 
     @Column(name = "user_password", nullable = false, length = 100)
@@ -44,7 +44,7 @@ public class Member implements UserDetails {
     @Column(name = "login_type", nullable = false, length = 50)
     private String loginType;
 
-    @Column(name = "provider_id", nullable = false, length = 50)
+    @Column(name = "provider_id", length = 50)
     private String providerId;
 
     @CreationTimestamp
