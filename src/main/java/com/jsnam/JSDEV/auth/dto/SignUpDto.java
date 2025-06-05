@@ -13,11 +13,11 @@ public class SignUpDto {
     private String userId;
     private String passWord;
 
-    public Member toEntity(String encodedPassword, List<String> roles) {
+    public Member toEntity(String encodedPassword, String role) {
         return Member.builder()
                 .userId(userId)
                 .userPassword(encodedPassword)
-                .roles(roles)
+                .role(role)
                 .deleteYn("N")
                 .loginType("LOCAL")
                 .build();

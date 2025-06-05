@@ -59,16 +59,14 @@ public class Member implements UserDetails {
     private String deleteYn;
 
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    @Column(name = "role", nullable = false, length = 50)
+    private String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return List.of(new SimpleGrantedAuthority(this.role));
     }
+
 
     @Override
     public String getPassword() {

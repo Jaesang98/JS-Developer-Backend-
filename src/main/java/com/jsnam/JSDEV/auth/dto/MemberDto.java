@@ -3,6 +3,8 @@ package com.jsnam.JSDEV.auth.dto;
 import com.jsnam.JSDEV.auth.entity.Member;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @ToString
 @AllArgsConstructor
@@ -12,12 +14,14 @@ public class MemberDto {
     private String userId;
     private String userName;
     private String loginType;
+    private String role;
 
     static public MemberDto toDto (Member member) {
         return MemberDto.builder()
                 .userId(member.getUserId())
                 .userName(member.getUsername())
                 .loginType(member.getLoginType())
+                .role(member.getRole())
                 .build();
     }
 

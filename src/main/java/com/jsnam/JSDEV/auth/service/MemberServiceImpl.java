@@ -1,8 +1,10 @@
 package com.jsnam.JSDEV.auth.service;
 
+import com.jsnam.JSDEV.DictList.dto.DictListDto;
 import com.jsnam.JSDEV.auth.dto.JwtToken;
 import com.jsnam.JSDEV.auth.dto.MemberDto;
 import com.jsnam.JSDEV.auth.dto.SignUpDto;
+import com.jsnam.JSDEV.auth.entity.Member;
 import com.jsnam.JSDEV.auth.repository.MemberRepository;
 import com.jsnam.JSDEV.auth.token.JwtTokenProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +47,12 @@ public class MemberServiceImpl implements MemberService{
         }
 
         String encodedPassword = passwordEncoder.encode(signUpDto.getPassWord());
-        List<String> roles = new ArrayList<>();
-        roles.add("USER");  // USER 권한 부여
-        return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, roles)));
+        String role = "USER";
+        return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, role)));
+    }
+
+    public Optional<MemberDto> memberInfo (String userId) {
+        return memberRepository.findByUserId(userId)
+                .map(MemberDto::toDto);
     }
 }
