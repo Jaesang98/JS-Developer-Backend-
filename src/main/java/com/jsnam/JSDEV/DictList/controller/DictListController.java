@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/js-dev/dict")
 public class DictListController {
     private final DictListRepository dictListRepository;
     private final DictListService dictListService;
