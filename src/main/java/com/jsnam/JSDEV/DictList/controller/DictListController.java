@@ -23,7 +23,6 @@ public class DictListController {
     
     // 리스트
     @GetMapping("/dictList")
-    @CrossOrigin(origins = "http://localhost:5173")
     public Map<String, Object> dictList(@RequestParam("dictTitle") String dictTitle) {
         List<DictListDto> list = dictListService.getDictList(dictTitle);
         Map<String, Object> response = new HashMap<>();
@@ -33,7 +32,6 @@ public class DictListController {
     
     // 리스트 상세
     @GetMapping("/dictDetail")
-    @CrossOrigin(origins = "http://localhost:5173")
     public Map<String, Object> dictListDetail(@RequestParam("dictId") String dictId) {
         Optional<DictListDto> detail = dictListService.getDictDetail(dictId);
         Map<String, Object> response = new HashMap<>();
@@ -48,7 +46,6 @@ public class DictListController {
 
     // 중복확인
     @GetMapping("/duplicate")
-    @CrossOrigin(origins = "http://localhost:5173")
     public Map<String, Object> dictListDuplicate(@RequestParam("dictTitle") String dictTitle) {
         Optional<DictListDto> detail = dictListService.getDictDuplicate(dictTitle);
         Map<String, Object> response = new HashMap<>();
@@ -64,7 +61,6 @@ public class DictListController {
 
     // 저장
     @PostMapping("/add")
-    @CrossOrigin(origins = "http://localhost:5173")
     public ResponseEntity<Map<String, Object>> dictListInsert(@RequestBody DictListDto request) {
         Map<String, Object> response = new HashMap<>();
 
@@ -83,7 +79,6 @@ public class DictListController {
 
     // 삭제
     @PostMapping("/delete")
-    @CrossOrigin(origins = "http://localhost:5173")
     public ResponseEntity<Map<String, Object>> dictListDelete(@RequestBody DictListDto request) {
         Map<String, Object> response = new HashMap<>();
 
@@ -102,7 +97,6 @@ public class DictListController {
 
     // 수정
     @PostMapping("/update")
-    @CrossOrigin(origins = "http://localhost:5173")
     public ResponseEntity<Map<String, Object>> dictListUpdate(@RequestBody DictListDto request) {
         Map<String, Object> response = new HashMap<>();
 
