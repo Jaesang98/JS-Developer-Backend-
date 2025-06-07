@@ -1,6 +1,6 @@
-package com.jsnam.JSDEV.DictList.repository;
+package com.jsnam.JSDEV.dictList.repository;
 
-import com.jsnam.JSDEV.DictList.entity.DictList;
+import com.jsnam.JSDEV.dictList.entity.DictList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

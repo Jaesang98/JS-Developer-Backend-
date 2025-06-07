@@ -1,6 +1,6 @@
-package com.jsnam.JSDEV.DictList.dto;
+package com.jsnam.JSDEV.dictList.dto;
 
-import com.jsnam.JSDEV.DictList.entity.DictList;
+import com.jsnam.JSDEV.dictList.entity.DictList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

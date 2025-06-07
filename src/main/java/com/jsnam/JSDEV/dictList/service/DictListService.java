@@ -1,8 +1,8 @@
-package com.jsnam.JSDEV.DictList.service;
+package com.jsnam.JSDEV.dictList.service;
 
-import com.jsnam.JSDEV.DictList.dto.DictListDto;
-import com.jsnam.JSDEV.DictList.entity.DictList;
-import com.jsnam.JSDEV.DictList.repository.DictListRepository;
+import com.jsnam.JSDEV.dictList.dto.DictListDto;
+import com.jsnam.JSDEV.dictList.entity.DictList;
+import com.jsnam.JSDEV.dictList.repository.DictListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

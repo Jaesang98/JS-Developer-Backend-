@@ -1,10 +1,8 @@
 package com.jsnam.JSDEV.auth.service;
 
-import com.jsnam.JSDEV.DictList.dto.DictListDto;
 import com.jsnam.JSDEV.auth.dto.JwtToken;
 import com.jsnam.JSDEV.auth.dto.MemberDto;
 import com.jsnam.JSDEV.auth.dto.SignUpDto;
-import com.jsnam.JSDEV.auth.entity.Member;
 import com.jsnam.JSDEV.auth.repository.MemberRepository;
 import com.jsnam.JSDEV.auth.token.JwtTokenProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,8 +14,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,7 +48,18 @@ public class MemberServiceImpl implements MemberService{
     }
 
     public Optional<MemberDto> memberInfo (String userId) {
-        return memberRepository.findByUserId(userId)
+        return memberRepository.findByUserIdAndDeleteYn(userId,"N")
                 .map(MemberDto::toDto);
     }
+
+    @Transactional
+    @Override
+    public Optional<MemberDto> memberWithDraw(String userId) {
+        return memberRepository.findByUserIdAndDeleteYn(userId,"N")
+                .map(member -> {
+                    member.setDeleteYn("Y");
+                    return MemberDto.toDto(member);
+                });
+    }
+
 }

@@ -1,9 +1,8 @@
-package com.jsnam.JSDEV.DictList.controller;
+package com.jsnam.JSDEV.dictList.controller;
 
-import com.jsnam.JSDEV.DictList.dto.DictListDto;
-import com.jsnam.JSDEV.DictList.entity.DictList;
-import com.jsnam.JSDEV.DictList.repository.DictListRepository;
-import com.jsnam.JSDEV.DictList.service.DictListService;
+import com.jsnam.JSDEV.dictList.dto.DictListDto;
+import com.jsnam.JSDEV.dictList.repository.DictListRepository;
+import com.jsnam.JSDEV.dictList.service.DictListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface MemberService {
     JwtToken signIn(String userId, String passWord);
     MemberDto signUp(SignUpDto signUpDto);
-
     Optional<MemberDto> memberInfo(String userId);
+    Optional<MemberDto> memberWithDraw(String userId);
 }

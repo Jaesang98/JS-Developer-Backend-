@@ -1,11 +1,9 @@
 package com.jsnam.JSDEV.auth.controller;
 
-import com.jsnam.JSDEV.DictList.dto.DictListDto;
 import com.jsnam.JSDEV.auth.dto.JwtToken;
 import com.jsnam.JSDEV.auth.dto.MemberDto;
 import com.jsnam.JSDEV.auth.dto.SignInDto;
 import com.jsnam.JSDEV.auth.dto.SignUpDto;
-import com.jsnam.JSDEV.auth.entity.Member;
 import com.jsnam.JSDEV.auth.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -85,4 +83,18 @@ public class MemberController {
         }
     }
 
+    // 회원탈퇴
+    @PatchMapping("/withdraw/{userId}")
+    public ResponseEntity<Map<String, Object>> withdrawUser(@PathVariable("userId") String userId) {
+        Optional<MemberDto> userInfo = memberService.memberWithDraw(userId);
+        Map<String, Object> response = new HashMap<>();
+
+        if (userInfo.isPresent()) {
+            response.put("message", "회원탈퇴가 완료되었습니다.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", "사용자의 정보가 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
 }

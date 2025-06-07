@@ -1,4 +1,4 @@
-package com.jsnam.JSDEV.DictList.entity;
+package com.jsnam.JSDEV.dictList.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
