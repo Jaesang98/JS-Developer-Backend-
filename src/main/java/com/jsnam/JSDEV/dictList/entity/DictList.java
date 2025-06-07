@@ -51,7 +51,7 @@ public class DictList {
     @Column(name = "updated")
     private LocalDateTime updated;
 
-    @Column(name = "deleteYn", nullable = false, length = 1)
+    @Column(name = "delete_yn", nullable = false, length = 1)
     private String deleteYn;
 
 }
