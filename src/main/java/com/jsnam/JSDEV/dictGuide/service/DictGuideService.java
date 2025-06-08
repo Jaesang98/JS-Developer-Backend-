@@ -1,24 +1,25 @@
 package com.jsnam.JSDEV.dictGuide.service;
 
+import com.jsnam.JSDEV.dictGuide.dto.GuideListDto;
 import com.jsnam.JSDEV.dictGuide.dto.MenuDto;
 import com.jsnam.JSDEV.dictGuide.dto.MenuNode;
+import com.jsnam.JSDEV.dictGuide.entity.MenuDescription;
 import com.jsnam.JSDEV.dictGuide.reposity.DictGuideRepository;
+import com.jsnam.JSDEV.dictGuide.reposity.GuideListRepository;
 import com.jsnam.JSDEV.dictList.dto.DictListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class DictGuideService {
     private final DictGuideRepository dictGuideRepository;
+    private final GuideListRepository guideListRepository;
 
     public List<MenuDto> getMenu () {
-        return dictGuideRepository.findByDeleteYn("N").stream().map(MenuDto::from).toList();
+        return dictGuideRepository.findByDeleteYnOrderByMenuId("N").stream().map(MenuDto::from).toList();
     }
 
     public List<MenuNode> buildMenuTree(List<MenuDto> flatList) {
@@ -40,6 +41,16 @@ public class DictGuideService {
             }
         }
 
+        for (MenuNode node : nodeMap.values()) {
+            node.getChildren().sort(Comparator.comparing(MenuNode::getMenuId));
+        }
+
+        rootList.sort(Comparator.comparing(MenuNode::getMenuId));
+
         return rootList;
+    }
+
+    public List<GuideListDto> getGuideList (String parentId) {
+        return guideListRepository.findByParentIdOrderByMenuDesId(parentId).stream().map(GuideListDto::from).toList();
     }
 }

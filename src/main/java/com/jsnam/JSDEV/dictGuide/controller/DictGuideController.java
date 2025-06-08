@@ -1,5 +1,6 @@
 package com.jsnam.JSDEV.dictGuide.controller;
 
+import com.jsnam.JSDEV.dictGuide.dto.GuideListDto;
 import com.jsnam.JSDEV.dictGuide.dto.MenuDto;
 import com.jsnam.JSDEV.dictGuide.dto.MenuNode;
 import com.jsnam.JSDEV.dictGuide.reposity.DictGuideRepository;
@@ -7,10 +8,7 @@ import com.jsnam.JSDEV.dictGuide.service.DictGuideService;
 import com.jsnam.JSDEV.dictList.dto.DictListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +22,7 @@ public class DictGuideController {
     private final DictGuideService dictGuideService;
 
     
-    // 리스트
+    // 메뉴
     @GetMapping("/menu")
     public ResponseEntity<Map<String, Object>> getMenuTree() {
         List<MenuDto> flatList = dictGuideService.getMenu();
@@ -33,5 +31,18 @@ public class DictGuideController {
 
     }
 
+    // 리스트
+    @GetMapping("/list")
+    public ResponseEntity<Map<String, Object>> getGuideList(@RequestParam String parentId) {
+        List<GuideListDto> list = dictGuideService.getGuideList(parentId);
+        Map<String, Object> response = new HashMap<>();
 
+        if (list != null && !list.isEmpty()) {
+            response.put("data", list);
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "해당 ID의 데이터가 없습니다.");
+            return ResponseEntity.status(404).body(response);
+        }
+    }
 }

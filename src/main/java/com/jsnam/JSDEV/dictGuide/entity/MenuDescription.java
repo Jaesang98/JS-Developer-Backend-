@@ -18,9 +18,15 @@ public class MenuDescription {
     @Column(name = "menuDes_id", nullable = false, length = 50)
     private String menuDesId;
 
+    // 3depth 메뉴
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
+
+    // 2depth 부모 메뉴
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", nullable = false)
+    private Menu parentMenu;
 
     @Column(name = "image_url", nullable = false, length = 255)
     private String imageUrl;
