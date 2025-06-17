@@ -1,6 +1,7 @@
 package com.jsnam.JSDEV.config;
 
 import com.jsnam.JSDEV.auth.filter.JwtAuthenticationFilter;
+import com.jsnam.JSDEV.auth.repository.MemberRepository;
 import com.jsnam.JSDEV.auth.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberRepository memberRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -35,11 +37,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/js-dev/member/sign-in").permitAll()
+                        .requestMatchers("/api/js-dev/member/login").permitAll()
 //                        .requestMatchers("/api/js-dev/member/test").hasRole("USER")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(memberRepository, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

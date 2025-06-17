@@ -52,7 +52,7 @@ public class JwtTokenProvider {
         long now = (new Date()).getTime();
 
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + 60 * 60 * 1000);
+        Date accessTokenExpiresIn = new Date(now + 20 * 1000);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
@@ -64,7 +64,7 @@ public class JwtTokenProvider {
         String refreshToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
-                .setExpiration(new Date(now + 86400000))
+                .setExpiration(new Date(now + 60 * 1000))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -158,4 +158,9 @@ public class JwtTokenProvider {
         }
     }
 
+    // 만료 후 refresh토큰에서 이메일로 검색해서 Member정보 가져옴
+    public String getEmailFromToken(String token) {
+        Claims claims = parseClaims(token);
+        return claims.getSubject();
+    }
 }

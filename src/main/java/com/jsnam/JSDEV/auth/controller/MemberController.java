@@ -18,7 +18,7 @@ public class MemberController {
     private final MemberService memberService;
 
     // 로그인
-    @PostMapping("/sign-in")
+    @PostMapping("/login")
     public JwtDto signIn(@RequestBody Member request) {
         String email = request.getEmail();
         String password = request.getPassword();
