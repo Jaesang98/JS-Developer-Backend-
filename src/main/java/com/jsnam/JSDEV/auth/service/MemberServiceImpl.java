@@ -1,11 +1,8 @@
 package com.jsnam.JSDEV.auth.service;
 
-import com.jsnam.JSDEV.auth.dto.JwtToken;
-import com.jsnam.JSDEV.auth.dto.MemberDto;
-import com.jsnam.JSDEV.auth.dto.SignUpDto;
+import com.jsnam.JSDEV.auth.dto.JwtDto;
 import com.jsnam.JSDEV.auth.repository.MemberRepository;
 import com.jsnam.JSDEV.auth.token.JwtTokenProvider;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,42 +19,25 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
-    public JwtToken signIn(String userId, String passWord) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, passWord);
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+    public JwtDto signIn(String email, String password) {
+        // 1. 전달받은 email과 password로 인증용 객체 생성
+        //    → "이 사용자가 로그인하려고 합니다" 라는 의미
+        //    ※ 이 시점에서는 인증이 완료되지 않은 상태 (authenticated = false)
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(email, password);
+
+        // 2. 인증 처리 수행
+        //    → 실제 DB에서 유저 정보를 조회하고, 비밀번호가 맞는지 확인
+        //    → 내부적으로 CustomUserDetailsService.loadUserByUsername()가 실행됨
+        Authentication authentication =
+                authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // 3. 인증 성공 시, 해당 사용자 정보를 바탕으로 JWT 토큰 생성
+        JwtDto jwtToken = jwtTokenProvider.generateToken(authentication);
+
         return jwtToken;
     }
-
-    @Transactional
-    @Override
-    public MemberDto signUp(SignUpDto signUpDto) {
-        if (memberRepository.existsById(signUpDto.getUserId())) {
-            throw new IllegalArgumentException("이미 사용 중인 사용자 입니다.");
-        }
-
-        String encodedPassword = passwordEncoder.encode(signUpDto.getPassWord());
-        String role = "USER";
-        return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, role)));
-    }
-
-    public Optional<MemberDto> memberInfo (String userId) {
-        return memberRepository.findByUserIdAndDeleteYn(userId,"N")
-                .map(MemberDto::toDto);
-    }
-
-    @Transactional
-    @Override
-    public Optional<MemberDto> memberWithDraw(String userId) {
-        return memberRepository.findByUserIdAndDeleteYn(userId,"N")
-                .map(member -> {
-                    member.setDeleteYn("Y");
-                    return MemberDto.toDto(member);
-                });
-    }
-
 }

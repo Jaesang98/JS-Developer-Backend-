@@ -9,40 +9,40 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = "userId")
+@EqualsAndHashCode(of = "sequence")
+@ToString
 public class Member implements UserDetails {
 
     @Id
-    @Column(name = "user_id", nullable = false, length = 50)
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "sequence")
+    private Long sequence;
 
-    @Column(name = "user_name", length = 50)
-    private String userName;
+    @Column(name = "user_email", nullable = false, length = 50, unique = true)
+    private String email;
 
-    @Column(name = "user_email", length = 50)
-    private String userEmail;
-
-    @Column(name = "user_phone", length = 50)
-    private String userPhone;
-
-    @Column(name = "user_image", length = 50)
-    private String userImage;
+    @Column(name = "user_name", nullable = false, length = 50)
+    private String name;
 
     @Column(name = "user_password", nullable = false, length = 100)
-    private String userPassword;
+    private String password;
 
-    @Column(name = "login_type", nullable = false, length = 50)
+    @Column(name = "login_type", nullable = false, length = 10)
     private String loginType;
+
+    @Column(name = "user_phone", length = 50)
+    private String phone;
+
+    @Column(name = "user_profile", length = 250)
+    private String profile;
 
     @Column(name = "provider_id", length = 50)
     private String providerId;
@@ -58,7 +58,6 @@ public class Member implements UserDetails {
     @Column(name = "delete_yn", nullable = false, length = 1)
     private String deleteYn;
 
-
     @Column(name = "role", nullable = false, length = 50)
     private String role;
 
@@ -67,16 +66,16 @@ public class Member implements UserDetails {
         return List.of(new SimpleGrantedAuthority(this.role));
     }
 
-
     @Override
     public String getPassword() {
-        return this.userPassword;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return this.userId;
+        return this.email;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

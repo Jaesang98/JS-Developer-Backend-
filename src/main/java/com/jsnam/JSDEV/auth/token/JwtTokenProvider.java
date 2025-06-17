@@ -1,6 +1,8 @@
 package com.jsnam.JSDEV.auth.token;
 
-import com.jsnam.JSDEV.auth.dto.JwtToken;
+import com.jsnam.JSDEV.auth.dto.JwtDto;
+import com.jsnam.JSDEV.auth.dto.UserInfoDto;
+import com.jsnam.JSDEV.auth.entity.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -20,20 +22,28 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+/*
+ * @@Slf4j : log라는 이름의 로깅 객체
+ */
+
 @Slf4j
 @Component
-
 public class JwtTokenProvider {
     private final Key key;
 
-    // application.property에서 secret 값 가져와서 key에 저장
+    /*
+     * application.properties 에서 secret 값 가져와서 key에 저장
+     * @Value : application.properties에 정의된 값을 변수에 주입할 때 사용
+     */
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     // Member 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
-    public JwtToken generateToken(Authentication authentication) {
+    public JwtDto generateToken(Authentication authentication) {
+        Member member = (Member) authentication.getPrincipal();
+
         // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -42,7 +52,7 @@ public class JwtTokenProvider {
         long now = (new Date()).getTime();
 
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + 60 * 60 * 1000);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
@@ -52,14 +62,31 @@ public class JwtTokenProvider {
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("auth", authorities)
                 .setExpiration(new Date(now + 86400000))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        return JwtToken.builder()
+
+        UserInfoDto userInfoDto = UserInfoDto.builder()
+                .email(member.getEmail())
+                .name(member.getName())
+                .phone(member.getPhone())
+                .loginType(member.getLoginType())
+                .profile(member.getProfile())
+                .providerId(member.getProviderId())
+                .created(member.getCreated())
+                .updated(member.getUpdated())
+                .deleteYn(member.getDeleteYn())
+                .role(member.getRole())
+                .build();
+
+        return JwtDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .userInfoDto(userInfoDto)
                 .build();
     }
 
@@ -114,6 +141,20 @@ public class JwtTokenProvider {
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
+        }
+    }
+
+    // 만료여부 확인
+    public boolean isTokenExpired(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
         }
     }
 
