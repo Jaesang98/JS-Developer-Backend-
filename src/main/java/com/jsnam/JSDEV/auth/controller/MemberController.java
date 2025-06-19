@@ -40,79 +40,34 @@ public class MemberController {
             return ResponseUtil.fail("로그인에 실패하였습니다.");
         }
     }
-
+    
+    //아이디 중복체크
     @GetMapping("/check-id")
-        public void checkId(@RequestParam("email") String email) {
-        System.out.println(email);
-        memberService.checkId(email);
+        public ResponseEntity<ApiResponse<String>> checkId(@RequestParam("email") String email) {
+        Boolean result = memberService.checkId(email);
 
-//        if (userInfo.isPresent()) {
-//            response.put("message", "아이디가 이미 존재합니다.");
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-//        } else {
-//            response.put("message", "사용 가능한 아이디입니다.");
-//            return ResponseEntity.ok(response);
-//        }
+        if(result) {
+            return ResponseUtil.success("생성 가능한 아이디 입니다.");
+        }
+        else {
+            return ResponseUtil.fail("현재 존재하는 아이디 입니다.");
+        }
     }
 
 
-//    @PostMapping("/sign-in")
-//    public ResponseEntity<?> signIn(@RequestBody Member signInDto, HttpServletResponse response) {
-//        String email = signInDto.getEmail();
-//        String password = signInDto.getPassword();
-//        JwtToken jwtToken = memberService.signIn(email, password);
-//
-//        Optional<Member> userInfo = memberService.memberInfo(userId);
-//        if (userInfo.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(Map.of("error", "존재하지 않는 사용자입니다."));
-//        }
-//
-//        try {
-//            JwtToken jwtToken = memberService.signIn(userId, passWord);
-//
-//            ResponseCookie cookie = ResponseCookie.from("accessToken", jwtToken.getAccessToken())
-//                    .httpOnly(true)
-//                    .secure(false)
-//                    .path("/")
-//                    .maxAge(60 * 60)
-//                    .sameSite("Lax")
-//                    .build();
-//            response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-//
-//            Map<String, Object> responseBody = new HashMap<>();
-//            responseBody.put("message", "로그인 성공");
-//            responseBody.put("userInfo", userInfo.get());
-//            return ResponseEntity.ok(responseBody);
-//
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                    .body(Map.of("error", "아이디 또는 비밀번호가 틀렸습니다."));
-//        }
-//    }
+    // 회원가입
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody Member request) {
+        Boolean result = memberService.register(request);
 
+        if(result) {
+            return ResponseUtil.success("회원가입에 성공하였습니다.");
+        }
+        else {
+            return ResponseUtil.fail("회원가입에 실패했습니다..");
+        }
+    }
 
-//    // 회원가입
-//    @PostMapping("/sign-up")
-//    public ResponseEntity<Member> signUp(@RequestBody Member data) {
-//        Member memberDto = memberService.signUp(data);
-//        return ResponseEntity.ok(memberDto);
-//    }
-//
-//    // 아이디 중복
-//    @GetMapping("/duplicate")
-//    public ResponseEntity<Map<String, Object>> checkUserIdDuplicate(@RequestParam("userId") String userId) {
-//        Optional<MemberDto> userInfo = memberService.memberInfo(userId);
-//        Map<String, Object> response = new HashMap<>();
-//
-//        if (userInfo.isPresent()) {
-//            response.put("message", "아이디가 이미 존재합니다.");
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-//        } else {
-//            response.put("message", "사용 가능한 아이디입니다.");
-//            return ResponseEntity.ok(response);
-//        }
-//    }
 //
 //    // 회원탈퇴
 //    @PatchMapping("/withdraw/{userId}")

@@ -1,8 +1,11 @@
 package com.jsnam.JSDEV.auth.service;
 
 import com.jsnam.JSDEV.auth.dto.JwtDto;
+import com.jsnam.JSDEV.auth.dto.UserInfoDto;
+import com.jsnam.JSDEV.auth.entity.Member;
 import com.jsnam.JSDEV.auth.repository.MemberRepository;
 import com.jsnam.JSDEV.auth.token.JwtTokenProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,16 +14,18 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Slf4j
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public JwtDto signIn(String email, String password) {
         // 1. 전달받은 email과 password로 인증용 객체 생성
@@ -42,9 +47,23 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public void checkId(String email) {
-        if (memberRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
-        }
+    public Boolean checkId(String email) {
+        return memberRepository.findByEmail(email).isEmpty();
+    }
+
+    @Override
+    public Boolean register(Member request) {
+         Member member = Member.builder()
+                 .email(request.getEmail())
+                 .password(passwordEncoder.encode(request.getPassword()))
+                 .name(request.getName())
+                 .phone(request.getPhone())
+                 .loginType("LOCAL")
+                 .role("USER")
+                 .deleteYn("N")
+                 .build();
+
+        Member saved = memberRepository.save(member);
+        return saved.getSequence() != null;
     }
 }
