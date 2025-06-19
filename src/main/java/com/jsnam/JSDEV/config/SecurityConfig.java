@@ -38,6 +38,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/js-dev/member/login").permitAll()
+                        .requestMatchers("/api/js-dev/member/check-id").permitAll()
+
 //                        .requestMatchers("/api/js-dev/member/test").hasRole("USER")
                         .anyRequest().authenticated()
                 )

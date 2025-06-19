@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     // JWT 검증을 건너뛸 경로들
     private static final String[] EXCLUDE_PATHS = {
             "/api/js-dev/member/login",
-            "/api/js-dev/member/signup",
+            "/api/js-dev/member/check-id",
             "/api/js-dev/member/register",
     };
 

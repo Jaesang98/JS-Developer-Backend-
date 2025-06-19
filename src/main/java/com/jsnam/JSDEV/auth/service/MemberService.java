@@ -4,4 +4,6 @@ import com.jsnam.JSDEV.auth.dto.JwtDto;
 
 public interface MemberService {
     JwtDto signIn(String email, String password);
+
+    public void checkId(String email);
 }

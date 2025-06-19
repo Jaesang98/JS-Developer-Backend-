@@ -40,4 +40,11 @@ public class MemberServiceImpl implements MemberService{
 
         return jwtToken;
     }
+
+    @Override
+    public void checkId(String email) {
+        if (memberRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+        }
+    }
 }

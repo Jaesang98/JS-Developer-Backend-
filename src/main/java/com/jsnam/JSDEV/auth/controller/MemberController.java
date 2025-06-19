@@ -5,10 +5,18 @@ import com.jsnam.JSDEV.auth.dto.JwtDto;
 import com.jsnam.JSDEV.auth.dto.UserInfoDto;
 import com.jsnam.JSDEV.auth.entity.Member;
 import com.jsnam.JSDEV.auth.service.MemberService;
+import com.jsnam.JSDEV.util.ApiResponse;
+import com.jsnam.JSDEV.util.ResponseUtil;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -19,19 +27,35 @@ public class MemberController {
 
     // 로그인
     @PostMapping("/login")
-    public JwtDto signIn(@RequestBody Member request) {
+    public ResponseEntity<ApiResponse<JwtDto>> signIn(@RequestBody Member request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
-        JwtDto jwtToken = memberService.signIn(email, password);
-        log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(), jwtToken.getRefreshToken());
-        return jwtToken;
+        JwtDto result = memberService.signIn(email, password);
+
+        if(result != null) {
+            return ResponseUtil.success(result);
+        }
+        else {
+            return ResponseUtil.fail("로그인에 실패하였습니다.");
+        }
     }
 
-    @PostMapping("/test")
-    public String test() {
-        return SecurityUtil.getCurrentUsername();
+    @GetMapping("/check-id")
+        public void checkId(@RequestParam("email") String email) {
+        System.out.println(email);
+        memberService.checkId(email);
+
+//        if (userInfo.isPresent()) {
+//            response.put("message", "아이디가 이미 존재합니다.");
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+//        } else {
+//            response.put("message", "사용 가능한 아이디입니다.");
+//            return ResponseEntity.ok(response);
+//        }
     }
+
+
 //    @PostMapping("/sign-in")
 //    public ResponseEntity<?> signIn(@RequestBody Member signInDto, HttpServletResponse response) {
 //        String email = signInDto.getEmail();
