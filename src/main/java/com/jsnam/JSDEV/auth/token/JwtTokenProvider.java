@@ -82,11 +82,12 @@ public class JwtTokenProvider {
                 .role(member.getRole())
                 .build();
 
+
         return JwtDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .userInfoDto(userInfoDto)
+                .userInfo(userInfoDto)
                 .build();
     }
 

@@ -1,32 +1,44 @@
-//package com.jsnam.JSDEV.dictList.service;
-//
-//import com.jsnam.JSDEV.auth.entity.Member;
-//import com.jsnam.JSDEV.auth.repository.MemberRepository;
-//import com.jsnam.JSDEV.dictList.dto.DictListDto;
-//import com.jsnam.JSDEV.dictList.entity.DictList;
-//import com.jsnam.JSDEV.dictList.repository.DictListRepository;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.stereotype.Service;
-//
-//import java.time.LocalDateTime;
-//import java.util.List;
-//import java.util.Optional;
-//
-//@Service
-//@RequiredArgsConstructor
-//public class DictListService {
-//    private final DictListRepository dictListRepository;
-//    private final MemberRepository memberRepository;
-//
-//    public List<DictListDto> getDictList (String dictTitle) {
-//        return dictListRepository.findByList(dictTitle).stream().map(DictListDto::from).toList();
-//    }
-//
-//    public Optional<DictListDto> getDictDetail (String dictId) {
-//        return dictListRepository.findByDictId(dictId).map(DictListDto::from);
-//    }
+package com.jsnam.JSDEV.dictionary.service;
+
+import com.jsnam.JSDEV.auth.repository.MemberRepository;
+import com.jsnam.JSDEV.dictionary.dto.DictListDto;
+import com.jsnam.JSDEV.dictionary.entity.DictList;
+import com.jsnam.JSDEV.dictionary.repository.DictListRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class DictListService {
+    private final DictListRepository dictListRepository;
+    private final MemberRepository memberRepository;
+
+    // 리스트 조회
+    public List<DictListDto> getList(String search) {
+        return dictListRepository.findByList(search).stream()
+                .map(DictListDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // 리스트 상세 조회
+    public Optional<DictListDto> getDetail (String id) {
+        return dictListRepository.findById(id).map(DictListDto::new);
+    }
+
+    // 리스트 상세 삭제
+    public void deleteDict(String id) {
+        DictList dictList = dictListRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 단어장이 없습니다."));
+
+//        dictList.setDeleteYn("Y");
+//        dictListRepository.save(dictList);
+    }
+
 //
 //    public Optional<DictListDto> getDictDuplicate (String dictTitle) {
 //        return dictListRepository.findByDictTitleAndDeleteYn(dictTitle, "N")
@@ -61,13 +73,6 @@
 //
 //
 //
-//    public DictListDto deleteDict (String dictId) {
-//        DictList dictList = dictListRepository.findById(dictId)
-//                .orElseThrow(() -> new RuntimeException("해당 ID의 단어가 존재하지 않습니다."));
-//        dictList.setDeleteYn("Y");
-//        DictList delete = dictListRepository.save(dictList);
-//        return DictListDto.from(delete);
-//    }
 //
 //    public DictListDto updateDict (DictListDto request) {
 //        DictList dictList = dictListRepository.findById(request.getDictId())
@@ -78,4 +83,4 @@
 //        DictList delete = dictListRepository.save(dictList);
 //        return DictListDto.from(delete);
 //    }
-//}
+}

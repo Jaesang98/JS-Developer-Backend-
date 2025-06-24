@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     String email = jwtTokenProvider.getEmailFromToken(refreshToken);
 
                     // 2. DB에서 사용자 정보 조회
-                    Member member = memberRepository.findByEmail(email)
+                    Member member = memberRepository.findByEmailAndDeleteYn(email, "N")
                             .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
                     // 3. Member → Authentication 수동 생성

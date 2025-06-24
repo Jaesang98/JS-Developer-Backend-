@@ -42,7 +42,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/js-dev/member/register").permitAll()
 
 //                        .requestMatchers("/api/js-dev/member/test").hasRole("USER")
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(memberRepository, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
