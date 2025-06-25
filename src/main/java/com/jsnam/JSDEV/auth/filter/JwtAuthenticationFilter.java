@@ -56,7 +56,22 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         if (StringUtils.hasText(accessToken)) {
             if (jwtTokenProvider.validateToken(accessToken)) {
                 // accessToken이 유효한 경우
-                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+//                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // 1. accessToken에서 email 추출
+                String email = jwtTokenProvider.getEmailFromToken(accessToken);
+
+                // 2. DB에서 사용자 정보 조회
+                Member member = memberRepository.findByEmailAndDeleteYn(email, "N")
+                        .orElseThrow(() -> new RuntimeException("사용자 없음"));
+
+                // 3. Member → Authentication 수동 생성
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        member, null, member.getAuthorities()
+                );
+
+                // 4. SecurityContext에 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             else if (jwtTokenProvider.isTokenExpired(accessToken)) {

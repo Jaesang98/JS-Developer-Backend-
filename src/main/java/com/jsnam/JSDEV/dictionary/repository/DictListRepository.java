@@ -20,8 +20,14 @@ public interface DictListRepository extends JpaRepository<DictList, String> {
     List<DictList> findByList(@Param("search") String search);
 
     Optional<DictList> findById(String id);
-//
-//    Optional<DictList> findByDictTitle(String dictTitle);
+
+    @Query("""
+    SELECT d
+    FROM DictList d
+    WHERE d.dictTitle = :title AND d.deleteYn = 'N'
+    """)
+    Optional<DictList> findByTitle(@Param("title") String title);
+
 //
 //    Optional<DictList> findByDictTitleAndDeleteYn(String dictTitle, String deleteYn);
 }

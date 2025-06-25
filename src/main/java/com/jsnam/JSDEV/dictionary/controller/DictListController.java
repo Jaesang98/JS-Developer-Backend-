@@ -57,7 +57,7 @@ public class DictListController {
 
     // 리스트 상세 삭제
     @PostMapping("/delete")
-    public ResponseEntity<ApiResponse<String>> dictDelete(@RequestBody DictListDto request) {
+    public ResponseEntity<ApiResponse<String>> dictDelete(@RequestBody DictList request) {
         try {
             dictListService.deleteDict(request.getId());
             return ResponseUtil.success("삭제 완료");
@@ -66,56 +66,31 @@ public class DictListController {
             return ResponseUtil.fail("실패");
         }
     }
-//
-//    // 중복확인
-//    @GetMapping("/duplicate")
-//    public Map<String, Object> dictListDuplicate(@RequestParam("dictTitle") String dictTitle) {
-//        Optional<DictListDto> detail = dictListService.getDictDuplicate(dictTitle);
-//        Map<String, Object> response = new HashMap<>();
-//
-//        if (detail.isPresent()) {
-//            response.put("result", false);
-//            response.put("dictId", detail.get().getDictId());
-//        } else {
-//            response.put("result", true);
-//        }
-//        return response;
-//    }
-//
-//    // 저장
-//    @PostMapping("/add")
-//    public ResponseEntity<Map<String, Object>> dictListInsert(@RequestBody DictListDto request) {
-//        Map<String, Object> response = new HashMap<>();
-//
-//        try {
-//            DictListDto saved = dictListService.insertDict(request.getDictTitle(), request.getDictDescription());
-//            response.put("result", true);
-//            response.put("message", "저장완료");
-//            return ResponseEntity.ok(response);
-//        }
-//        catch (Exception e) {
-//            response.put("result", false);
-//            response.put("message", "저장실패");
-//            return ResponseEntity.status(500).body(response);
-//        }
-//    }
-//
-//
-//    // 수정
-//    @PostMapping("/update")
-//    public ResponseEntity<Map<String, Object>> dictListUpdate(@RequestBody DictListDto request) {
-//        Map<String, Object> response = new HashMap<>();
-//
-//        try {
-//            DictListDto updated = dictListService.updateDict(request);
-//            response.put("result", true);
-//            response.put("message", "수정완료");
-//            return ResponseEntity.ok(response);
-//        }
-//        catch (Exception e) {
-//            response.put("result", false);
-//            response.put("message", "수정실패");
-//            return ResponseEntity.status(500).body(response);
-//        }
-//    }
+
+    // 중복확인
+    @GetMapping("/check-id")
+    public ResponseEntity<ApiResponse<String>> dictCheck(@RequestParam("title") String title) {
+        try {
+            boolean exists = dictListService.isTitleExist(title);
+            if (exists) {
+                return ResponseUtil.fail("현재 존재하는 단어입니다.");
+            } else {
+                return ResponseUtil.success("사용 가능한 단어입니다.");
+            }
+        } catch (Exception e) {
+            return ResponseUtil.fail("중복 확인에 실패하였습니다.");
+        }
+    }
+
+    // 저장 수정 둘다됨
+    @PostMapping("/save")
+    public ResponseEntity<ApiResponse<String>> dictInsert(@RequestBody DictList request) {
+        try {
+            dictListService.insertDict(request);
+            return ResponseUtil.success("저장 완료");
+        }
+        catch (Exception e) {
+            return ResponseUtil.fail("저장 실패");
+        }
+    }
 }
