@@ -59,17 +59,16 @@ public class DictListService {
     public void insertDict(DictList request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Member member = (Member) authentication.getPrincipal();
-        Optional<DictList> dictList_exit = dictListRepository.findByTitle(request.getDictTitle());
+        Optional<DictList> dictList_exit = dictListRepository.findById(request.getId());
 
         if (dictList_exit.isPresent()) {
-            System.out.println("여기까지 오나");
             DictList dictList = dictList_exit.get();
-            dictList.setDeleteYn("N");
+            dictList.setDictTitle(request.getDictTitle());
             dictList.setDictDescription(request.getDictDescription());
+            dictList.setDeleteYn("N");
             dictList.setUpdated(LocalDateTime.now());
             dictListRepository.save(dictList);
         } else {
-            System.out.println("여기까지 오나2");
             DictList dictList = new DictList();
             dictList.setDictTitle(request.getDictTitle());
             dictList.setDictDescription(request.getDictDescription());
@@ -79,18 +78,4 @@ public class DictListService {
             dictListRepository.save(dictList);
         }
     }
-//
-//
-//
-//
-//
-//    public DictListDto updateDict (DictListDto request) {
-//        DictList dictList = dictListRepository.findById(request.getDictId())
-//                .orElseThrow(() -> new RuntimeException("존재하지 않는 ID입니다: " + request.getDictId()));
-//        dictList.setUpdated(LocalDateTime.now());
-//        dictList.setDictTitle(request.getDictTitle());
-//        dictList.setDictDescription(request.getDictDescription());
-//        DictList delete = dictListRepository.save(dictList);
-//        return DictListDto.from(delete);
-//    }
 }
